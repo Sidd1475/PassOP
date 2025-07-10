@@ -1,13 +1,14 @@
 import React from "react";
-import { ToastContainer, toast , Bounce } from "react-toastify";
+import { ToastContainer, toast, Bounce } from "react-toastify";
 import { useEffect, useState, useRef } from "react";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 const Manager = () => {
   const ref = useRef();
   const passwordRef = useRef();
   const [form, setForm] = useState({ site: "", username: "", password: "" });
   const [passwordArray, setPasswordArray] = useState([]);
+  const [visibleIds, setVisibleIds] = useState(new Set());
 
   useEffect(() => {
     let passwords = localStorage.getItem("passwords");
@@ -18,17 +19,17 @@ const Manager = () => {
   }, []);
 
   const copyText = (text) => {
-    toast('Copied to CLipboard!', {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce
-        });
+    toast("Copied to CLipboard!", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      transition: Bounce,
+    });
     navigator.clipboard.writeText(text);
   };
 
@@ -44,13 +45,20 @@ const Manager = () => {
 
   const savePassword = () => {
     console.log(form);
-    if(form.site.length>3 && form.username.length>3 && form.password.length>3){
-    setPasswordArray([...passwordArray, {...form, id:uuidv4()}]);
-    localStorage.setItem("passwords", JSON.stringify([...passwordArray, {...form, id:uuidv4()}]));
-    
-    console.log(passwordArray);
-    setForm({ site: "", username: "", password: "" })
-    toast('Password Saved!', {
+    if (
+      form.site.length > 3 &&
+      form.username.length > 3 &&
+      form.password.length > 3
+    ) {
+      setPasswordArray([...passwordArray, { ...form, id: uuidv4() }]);
+      localStorage.setItem(
+        "passwords",
+        JSON.stringify([...passwordArray, { ...form, id: uuidv4() }])
+      );
+
+      console.log(passwordArray);
+      setForm({ site: "", username: "", password: "" });
+      toast("Password Saved!", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -59,30 +67,32 @@ const Manager = () => {
         draggable: true,
         progress: undefined,
         theme: "light",
-        transition: Bounce
-        });
-    }
-    else{
-        toast('Error Password not saved!', {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            transition: Bounce
-            });
+        transition: Bounce,
+      });
+    } else {
+      toast("Error Password not saved!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
     }
   };
   const deletePassword = (id) => {
-    console.log("Deleting password with id " , id);
-    let c = confirm("Do you really want to delete this password ?")
-    if(c){
-     setPasswordArray(passwordArray.filter(item=>item.id!==id));
-     localStorage.setItem("passwords", JSON.stringify(passwordArray.filter(item=>item.id!==id)))
-     toast('Password Deleted!', {
+    console.log("Deleting password with id ", id);
+    let c = confirm("Do you really want to delete this password ?");
+    if (c) {
+      setPasswordArray(passwordArray.filter((item) => item.id !== id));
+      localStorage.setItem(
+        "passwords",
+        JSON.stringify(passwordArray.filter((item) => item.id !== id))
+      );
+      toast("Password Deleted!", {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: false,
@@ -91,15 +101,14 @@ const Manager = () => {
         draggable: true,
         progress: undefined,
         theme: "light",
-        transition: Bounce
-        });
+        transition: Bounce,
+      });
     }
   };
   const editPassword = (id) => {
-    console.log("Editing password with id " , id);
-    setForm(passwordArray.filter(i=>i.id===id)[0])
-    setPasswordArray(passwordArray.filter(item=>item.id!==id));
-
+    console.log("Editing password with id ", id);
+    setForm(passwordArray.filter((i) => i.id === id)[0]);
+    setPasswordArray(passwordArray.filter((item) => item.id !== id));
   };
 
   const handleChange = (e) => {
@@ -107,20 +116,19 @@ const Manager = () => {
   };
   return (
     <>
-     <ToastContainer
-position="top-right"
-autoClose={3000}
-hideProgressBar={false}
-newestOnTop={false}
-closeOnClick
-rtl={false}
-pauseOnFocusLoss
-draggable
-pauseOnHover={false}
-theme="light"
-transition= {Bounce}
-/>
-      
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover={false}
+        theme="light"
+        transition={Bounce}
+      />
 
       <div className="p-5  md:container md:px-40 md:py-16 md:mx-auto ">
         <h1 className="text-4xl font-bold text-center">
@@ -130,9 +138,8 @@ transition= {Bounce}
         </h1>
         <p className="text-green-900 text-lg text-center">
           Your own password manager
-        </p> 
+        </p>
         <div className=" flex flex-col p-4 gap-8 items-center">
-        
           <input
             value={form.site}
             onChange={handleChange}
@@ -152,14 +159,15 @@ transition= {Bounce}
               name="username"
               id=""
             />
-            
+
             <div className="relative flex items-center ">
               <input
                 ref={passwordRef}
                 value={form.password}
                 onChange={handleChange}
+                
                 className="rounded-full bg-white border border-green-500 w-full text-black p-4 py-1 "
-                type="text"
+                type="password"
                 placeholder="Enter Password"
                 name="password"
                 id=""
@@ -168,7 +176,7 @@ transition= {Bounce}
                 {" "}
                 <img
                   ref={ref}
-                  src="eye-open.svg"
+                  src="eye.svg"
                   alt="eye"
                   width="40"
                   className="p-2 cursor-pointer   "
@@ -177,7 +185,6 @@ transition= {Bounce}
               </span>
             </div>
           </div>
-          
 
           <button
             onClick={savePassword}
@@ -189,7 +196,7 @@ transition= {Bounce}
             ></lord-icon>
             Save Password
           </button>
-          </div> 
+        </div>
         <div className="passwords">
           <h2 className="text-2xl font-bold py-4 ">Your Passwords</h2>
           {passwordArray.length === 0 && <div>No passwords to show</div>}
@@ -252,8 +259,11 @@ transition= {Bounce}
                           copyText(item.password);
                         }}
                       >
-                        <div className="flex justify-center">
-                          {item.password}
+                        <div className="flex justify-center items-center gap-1">
+                       
+                          {visibleIds.has(item.id)
+                            ? item.password
+                            : "*".repeat(item.password.length)}
                           <img
                             src="copy.svg"
                             alt="copy"
@@ -262,11 +272,27 @@ transition= {Bounce}
                           />
                         </div>
                       </td>
-                      <td
-                        className="py-2 flex justify-center gap-2 text-center copy "
-                      >
-                      <span className="cursor-pointer"><img src="edit.svg" alt="edit" width={20} onClick={ ()=>{editPassword(item.id)}} /></span>
-                      <span className="cursor-pointer"><img src="delete.svg" alt="edit" width={20}  onClick={ ()=>{deletePassword(item.id)}}/></span>
+                      <td className="py-2 flex justify-center gap-2 text-center copy ">
+                        <span className="cursor-pointer">
+                          <img
+                            src="edit.svg"
+                            alt="edit"
+                            width={20}
+                            onClick={() => {
+                              editPassword(item.id);
+                            }}
+                          />
+                        </span>
+                        <span className="cursor-pointer">
+                          <img
+                            src="delete.svg"
+                            alt="edit"
+                            width={20}
+                            onClick={() => {
+                              deletePassword(item.id);
+                            }}
+                          />
+                        </span>
                       </td>
                     </tr>
                   );
